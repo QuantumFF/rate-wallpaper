@@ -164,95 +164,109 @@ export function RankView() {
         </div>
 
         {/* Comparison Area */}
-        <div className="grid grid-cols-2 gap-4 md:gap-8 items-center">
+        <div className="grid grid-cols-2 gap-4 md:gap-8 items-start">
           {/* Left Option */}
           <div
-            className={`relative w-full aspect-video group cursor-pointer transition-all duration-300 rounded-xl ${voting === "right" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "left" ? "ring-4 ring-primary scale-[1.02]" : "hover:scale-[1.01]"}`}
+            className="flex flex-col gap-3 group cursor-pointer"
             onClick={() => handleVote(left, right, "left")}
           >
-            <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">
-              <img
-                src={api.getImageUrl(left.id, "medium")}
-                alt="Left Wallpaper"
-                className="object-cover w-full h-full bg-black/20"
-              />
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                <span className="opacity-0 group-hover:opacity-100 bg-background/80 backdrop-blur-sm text-foreground px-4 py-2 rounded-full text-sm font-medium transition-opacity shadow-lg">
-                  Select Left
-                </span>
-              </div>
-              {/* Vote Feedback */}
-              {voting === "left" && (
-                <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in fade-in duration-200">
-                  <div className="bg-primary text-primary-foreground rounded-full p-4 shadow-xl">
-                    <ArrowLeft className="h-8 w-8" />
-                  </div>
+            <div
+              className={`relative w-full aspect-video transition-all duration-300 rounded-xl ${voting === "right" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "left" ? "ring-4 ring-primary scale-[1.02]" : "group-hover:scale-[1.01]"}`}
+            >
+              <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">
+                <img
+                  src={api.getImageUrl(left.id, "medium")}
+                  alt="Left Wallpaper"
+                  className="object-cover w-full h-full bg-black/20"
+                />
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <span className="opacity-0 group-hover:opacity-100 bg-background/80 backdrop-blur-sm text-foreground px-4 py-2 rounded-full text-sm font-medium transition-opacity shadow-lg">
+                    Select Left
+                  </span>
                 </div>
-              )}
+                {/* Vote Feedback */}
+                {voting === "left" && (
+                  <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in fade-in duration-200">
+                    <div className="bg-primary text-primary-foreground rounded-full p-4 shadow-xl">
+                      <ArrowLeft className="h-8 w-8" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
+            <span className="text-center text-xs text-muted-foreground font-medium opacity-50 group-hover:opacity-100 transition-opacity hidden md:block">
+              ← Left Arrow
+            </span>
           </div>
 
           {/* Right Option */}
           <div
-            className={`relative w-full aspect-video group cursor-pointer transition-all duration-300 rounded-xl ${voting === "left" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "right" ? "ring-4 ring-primary scale-[1.02]" : "hover:scale-[1.01]"}`}
+            className="flex flex-col gap-3 group cursor-pointer"
             onClick={() => handleVote(right, left, "right")}
           >
-            <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">
-              <img
-                src={api.getImageUrl(right.id, "medium")}
-                alt="Right Wallpaper"
-                className="object-cover w-full h-full bg-black/20"
-              />
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                <span className="opacity-0 group-hover:opacity-100 bg-background/80 backdrop-blur-sm text-foreground px-4 py-2 rounded-full text-sm font-medium transition-opacity shadow-lg">
-                  Select Right
-                </span>
-              </div>
-              {/* Vote Feedback */}
-              {voting === "right" && (
-                <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in fade-in duration-200">
-                  <div className="bg-primary text-primary-foreground rounded-full p-4 shadow-xl">
-                    <ArrowRight className="h-8 w-8" />
-                  </div>
+            <div
+              className={`relative w-full aspect-video transition-all duration-300 rounded-xl ${voting === "left" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "right" ? "ring-4 ring-primary scale-[1.02]" : "group-hover:scale-[1.01]"}`}
+            >
+              <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">
+                <img
+                  src={api.getImageUrl(right.id, "medium")}
+                  alt="Right Wallpaper"
+                  className="object-cover w-full h-full bg-black/20"
+                />
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <span className="opacity-0 group-hover:opacity-100 bg-background/80 backdrop-blur-sm text-foreground px-4 py-2 rounded-full text-sm font-medium transition-opacity shadow-lg">
+                    Select Right
+                  </span>
                 </div>
-              )}
+                {/* Vote Feedback */}
+                {voting === "right" && (
+                  <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in fade-in duration-200">
+                    <div className="bg-primary text-primary-foreground rounded-full p-4 shadow-xl">
+                      <ArrowRight className="h-8 w-8" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
+            <span className="text-center text-xs text-muted-foreground font-medium opacity-50 group-hover:opacity-100 transition-opacity hidden md:block">
+              Right Arrow →
+            </span>
           </div>
         </div>
-      </div>
 
-      {/* Footer Controls */}
-      <div className="flex justify-center items-center gap-4 py-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setView("review")}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <StopCircle className="mr-2 h-4 w-4" />
-          Stop & Review
-        </Button>
+        {/* Footer Controls */}
+        <div className="flex justify-center items-center gap-4 pt-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setView("review");
+            }}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <StopCircle className="mr-2 h-4 w-4" />
+            Stop & Review
+          </Button>
 
-        <div className="h-4 w-px bg-border" />
+          <div className="h-4 w-px bg-border" />
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => fetchPair()}
-          disabled={loading || voting !== null}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <SkipForward className="mr-2 h-4 w-4" />
-          Skip Pair
-        </Button>
-      </div>
-
-      {/* Keyboard Hints */}
-      <div className="hidden md:flex justify-between px-8 text-[10px] text-muted-foreground opacity-50">
-        <span>← Left Arrow</span>
-        <span>Right Arrow →</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              fetchPair();
+            }}
+            disabled={loading || voting !== null}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <SkipForward className="mr-2 h-4 w-4" />
+            Skip Pair
+          </Button>
+        </div>
       </div>
     </div>
   );
