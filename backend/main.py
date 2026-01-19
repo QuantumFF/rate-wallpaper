@@ -6,7 +6,7 @@ from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, text
 from PIL import Image
 import io
 
@@ -16,7 +16,7 @@ models.Base.metadata.create_all(bind=database.engine)
 
 # Ensure index exists for performance (migration for existing DBs)
 with database.engine.connect() as conn:
-    conn.execute(func.text("CREATE INDEX IF NOT EXISTS ix_wallpapers_comparisons_count ON wallpapers (comparisons_count)"))
+    conn.execute(text("CREATE INDEX IF NOT EXISTS ix_wallpapers_comparisons_count ON wallpapers (comparisons_count)"))
     conn.commit()
 
 app = FastAPI()
