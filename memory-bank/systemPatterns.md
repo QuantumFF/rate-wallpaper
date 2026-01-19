@@ -18,6 +18,8 @@ graph TD
 - **SQLite:** Stores wallpaper metadata, ratings, and comparison history.
 - **TrueSkill:** Used for calculating ratings.
 - **Scanner:** Recursively finds images.
+- **Image Processing:** `Pillow` is used for on-the-fly image resizing to optimize frontend performance.
+- **Caching:** A local filesystem cache (`.cache` directory) stores generated thumbnails to prevent redundant processing.
 - **Module Execution:** The backend is designed to be run as a Python module (`python -m backend.run`) to ensure correct relative imports and package resolution.
 
 ## Frontend Design
@@ -31,8 +33,8 @@ graph TD
   - **Minimalist Container:** `Layout.tsx` provides a clean, full-screen container without heavy chrome.
   - **Immersive Views:**
     - `ScanView`: Centered, focus-driven input.
-    - `RankView`: Split-screen layout maximizing image visibility.
-    - `ReviewView`: Clean grid for efficient management.
+    - `RankView`: Split-screen layout maximizing image visibility. Implements **preloading** and **optimistic updates** for instant navigation.
+    - `ReviewView`: Clean grid for efficient management. Uses **thumbnail** images to handle large lists efficiently.
 
 ## Key Workflows
 

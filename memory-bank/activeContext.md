@@ -8,6 +8,15 @@ Project completion and verification.
 
 - **Backend Logic:**
   - Updated `/move` endpoint to handle relative paths. If a relative path (e.g., "rejected") is provided, the file is moved to a subfolder within its _current_ directory, rather than relative to the application root.
+- **Performance Optimization:**
+  - **Backend:**
+    - Implemented on-the-fly image resizing and caching using `Pillow`.
+    - Added `.cache` directory for storing generated thumbnails.
+    - Added database index for `comparisons_count` to speed up pairing queries.
+  - **Frontend:**
+    - Implemented image preloading in `RankView` for instant navigation.
+    - Added optimistic UI updates to eliminate perceived latency during voting.
+    - Optimized `ReviewView` to use small thumbnails for the grid layout.
 - **UI Refinement (User Feedback):**
   - **RankView:**
     - Grouped progress bar and wallpaper cards in a centered container to bring them closer together.
@@ -33,3 +42,5 @@ Project completion and verification.
 - **Immersive Mode:** Removed the app header entirely to focus 100% on the content (wallpapers).
 - **Aspect Ratio:** Enforced 16:9 for consistency, even if it means cropping non-standard wallpapers (via `object-cover`).
 - **Dark Mode:** Enforced as default.
+- **Image Caching:** Implemented a local filesystem cache (`.cache`) for resized images to balance storage usage with performance.
+- **Optimistic UI:** Prioritized perceived performance in the ranking view by updating the UI immediately while background tasks complete.

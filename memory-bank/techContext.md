@@ -7,6 +7,7 @@
   - Framework: FastAPI
   - Database: SQLite (via SQLAlchemy)
   - Ranking: TrueSkill (Python library)
+  - Image Processing: Pillow (PIL)
   - Environment: `venv`
 - **Frontend:**
   - Framework: React 19

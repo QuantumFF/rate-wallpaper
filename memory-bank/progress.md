@@ -26,12 +26,11 @@
   - User acceptance testing of the new UI.
   - Edge case handling (corrupt images, permission errors).
 - **Refinement:**
-  - Performance optimization for very large collections.
   - Undo functionality (optional).
 
 ## Current Status
 
-The project is feature-complete and has undergone a major UI redesign to meet modern aesthetic standards. The application is ready for user testing.
+The project is feature-complete and highly optimized. Performance bottlenecks with large images and collections have been resolved through backend image processing and frontend optimizations. The application is ready for user testing.
 
 ## Known Issues
 
@@ -41,3 +40,4 @@ The project is feature-complete and has undergone a major UI redesign to meet mo
 
 - **Initial:** Simple MVP with basic shadcn/ui components.
 - **Redesign:** Shifted to a "content-first" dark mode design to better suit wallpaper evaluation.
+- **Optimization:** Prioritized performance (image resizing, caching, preloading) to ensure a smooth experience with high-resolution wallpapers.
