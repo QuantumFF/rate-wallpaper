@@ -4,7 +4,7 @@
 
 - **Backend:**
   - FastAPI server running.
-  - SQLite database with TrueSkill ranking.
+  - SQLite database with TrueSkill ranking (located in `backend/db/`).
   - Recursive image scanning.
   - Pairwise selection logic.
   - File operations (move).

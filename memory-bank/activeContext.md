@@ -7,6 +7,7 @@ Project completion and verification.
 ## Recent Changes
 
 - **Backend Logic:**
+  - **Database Relocation:** Moved the SQLite database file to a dedicated `backend/db/` directory to improve project organization. Updated `database.py` to use a relative path resolution, ensuring the database is correctly located regardless of the execution context.
   - Updated `/move` endpoint to handle relative paths. If a relative path (e.g., "rejected") is provided, the file is moved to a subfolder within its _current_ directory, rather than relative to the application root.
 - **Performance Optimization:**
   - **Backend:**
@@ -43,6 +44,7 @@ Project completion and verification.
 
 ## Active Decisions
 
+- **Database Location:** The SQLite database is now stored in `backend/db/wallpapers.db` instead of the project root, keeping the root directory clean.
 - **File Operations:** Moving files with a relative path now implies "create subfolder in source directory", which is safer and more intuitive for organizing collections in place.
 - **Immersive Mode:** Removed the app header entirely to focus 100% on the content (wallpapers).
 - **Aspect Ratio:** Enforced 16:9 for consistency, even if it means cropping non-standard wallpapers (via `object-cover`).
