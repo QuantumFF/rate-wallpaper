@@ -31,6 +31,8 @@ Project completion and verification.
   - **Layout:** Minimalist full-screen layout.
   - **ScanView:** Redesigned with a clean, centered input.
   - **ReviewView:** Clean grid layout.
+- **State Persistence:**
+  - Lifted `RankView` state (`currentPair`, `nextPair`) to `AppContext` to preserve the current comparison when navigating between views.
 
 ## Next Steps
 

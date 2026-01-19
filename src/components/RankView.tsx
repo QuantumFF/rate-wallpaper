@@ -12,16 +12,21 @@ import {
 import { useCallback, useEffect, useState } from "react";
 
 export function RankView() {
-  const [pair, setPair] = useState<[Wallpaper, Wallpaper] | null>(null);
-  const [nextPair, setNextPair] = useState<[Wallpaper, Wallpaper] | null>(null);
-  const [loading, setLoading] = useState(true);
+  const {
+    progress,
+    refreshProgress,
+    setView,
+    currentPair,
+    nextPair,
+    setPairs,
+  } = useApp();
+  const [loading, setLoading] = useState(!currentPair);
   const [voting, setVoting] = useState<"left" | "right" | null>(null);
-  const { progress, refreshProgress, setView } = useApp();
 
   const fetchNextPair = useCallback(async () => {
     try {
       const newPair = await api.getPair();
-      setNextPair(newPair);
+      setPairs(undefined, newPair);
 
       // Preload images
       const img1 = new Image();
@@ -31,24 +36,28 @@ export function RankView() {
     } catch (error) {
       console.error("Failed to fetch next pair:", error);
     }
-  }, []);
+  }, [setPairs]);
 
   const fetchPair = useCallback(async () => {
     setLoading(true);
     try {
       const newPair = await api.getPair();
-      setPair(newPair);
+      setPairs(newPair, null);
       void fetchNextPair();
     } catch (error) {
       console.error("Failed to fetch pair:", error);
     } finally {
       setLoading(false);
     }
-  }, [fetchNextPair]);
+  }, [fetchNextPair, setPairs]);
 
   useEffect(() => {
-    void fetchPair();
-  }, [fetchPair]);
+    if (!currentPair) {
+      void fetchPair();
+    } else if (!nextPair) {
+      void fetchNextPair();
+    }
+  }, [fetchPair, currentPair, nextPair, fetchNextPair]);
 
   const handleVote = async (
     winner: Wallpaper,
@@ -63,8 +72,7 @@ export function RankView() {
 
     // Optimistic update
     if (nextPair) {
-      setPair(nextPair);
-      setNextPair(null);
+      setPairs(nextPair, null);
       setVoting(null);
 
       // Background tasks
@@ -92,20 +100,20 @@ export function RankView() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!pair || loading || voting) return;
+      if (!currentPair || loading || voting) return;
 
       if (e.key === "ArrowLeft") {
-        void handleVote(pair[0], pair[1], "left");
+        void handleVote(currentPair[0], currentPair[1], "left");
       } else if (e.key === "ArrowRight") {
-        void handleVote(pair[1], pair[0], "right");
+        void handleVote(currentPair[1], currentPair[0], "right");
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [pair, loading, voting]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentPair, loading, voting]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!pair && loading) {
+  if (!currentPair && loading) {
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -113,7 +121,7 @@ export function RankView() {
     );
   }
 
-  if (!pair) {
+  if (!currentPair) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
         Error loading wallpapers.
@@ -121,7 +129,7 @@ export function RankView() {
     );
   }
 
-  const [left, right] = pair;
+  const [left, right] = currentPair;
 
   return (
     <div className="flex flex-col flex-1 h-full w-full max-w-[1920px] mx-auto p-4 min-h-0">

@@ -27,7 +27,7 @@ graph TD
 - **React + Vite:** SPA framework.
 - **shadcn/ui:** Component library for consistent design.
 - **Tailwind CSS:** Utility-first styling with a custom **Dark Mode** theme (Zinc palette).
-- **State Management:** React Context (`AppContext`) for global app state (current view, progress).
+- **State Management:** React Context (`AppContext`) for global app state (current view, progress, current ranking pair).
 - **API Layer:** `fetch` wrapper (`api.ts`) for backend communication.
 - **Layout Strategy:**
   - **Minimalist Container:** `Layout.tsx` provides a clean, full-screen container without heavy chrome.

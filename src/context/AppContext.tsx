@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import type { ProgressStats } from "@/lib/api";
+import type { ProgressStats, Wallpaper } from "@/lib/api";
 import { api } from "@/lib/api";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -10,6 +10,12 @@ interface AppContextType {
   setView: (view: View) => void;
   progress: ProgressStats | null;
   refreshProgress: () => Promise<void>;
+  currentPair: [Wallpaper, Wallpaper] | null;
+  nextPair: [Wallpaper, Wallpaper] | null;
+  setPairs: (
+    current?: [Wallpaper, Wallpaper] | null,
+    next?: [Wallpaper, Wallpaper] | null,
+  ) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -17,6 +23,18 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [view, setView] = useState<View>("scan");
   const [progress, setProgress] = useState<ProgressStats | null>(null);
+  const [currentPair, setCurrentPair] = useState<[Wallpaper, Wallpaper] | null>(
+    null,
+  );
+  const [nextPair, setNextPair] = useState<[Wallpaper, Wallpaper] | null>(null);
+
+  const setPairs = (
+    current?: [Wallpaper, Wallpaper] | null,
+    next?: [Wallpaper, Wallpaper] | null,
+  ) => {
+    if (current !== undefined) setCurrentPair(current);
+    if (next !== undefined) setNextPair(next);
+  };
 
   const refreshProgress = async () => {
     try {
@@ -39,7 +57,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AppContext.Provider value={{ view, setView, progress, refreshProgress }}>
+    <AppContext.Provider
+      value={{
+        view,
+        setView,
+        progress,
+        refreshProgress,
+        currentPair,
+        nextPair,
+        setPairs,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
