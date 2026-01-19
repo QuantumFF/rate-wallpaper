@@ -165,14 +165,19 @@ def get_progress(db: Session = Depends(get_db)):
     # Threshold: default sigma is 8.333. Let's say < 4.0 is "evaluated"
     evaluated_count = db.query(models.Wallpaper).filter(models.Wallpaper.rating_sigma < 4.0).count()
     
+    # Wallpapers that have been part of at least one comparison
+    participated_count = db.query(models.Wallpaper).filter(models.Wallpaper.comparisons_count > 0).count()
+    
     percentage = 0
     if total_wallpapers > 0:
-        percentage = (evaluated_count / total_wallpapers) * 100
+        # Use participated_count for percentage to give immediate feedback
+        percentage = (participated_count / total_wallpapers) * 100
         
     return {
         "total_wallpapers": total_wallpapers,
         "total_comparisons": total_comparisons,
         "evaluated_count": evaluated_count,
+        "participated_count": participated_count,
         "percentage": percentage
     }
 

@@ -135,12 +135,32 @@ export function RankView() {
     <div className="flex flex-col flex-1 h-full w-full max-w-[1920px] mx-auto p-4 min-h-0">
       <div className="flex-1 flex flex-col justify-center gap-4 w-full">
         {/* Progress Header */}
-        <div className="w-full max-w-2xl mx-auto space-y-1">
-          <div className="flex justify-between text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            <span>Progress</span>
-            <span>{progress?.percentage.toFixed(1)}%</span>
+        <div className="w-full max-w-2xl mx-auto space-y-2">
+          <div className="flex justify-between items-end">
+            <div className="flex flex-col">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                Progress
+              </span>
+              <span className="text-2xl font-bold">
+                {progress?.percentage.toFixed(1)}%
+              </span>
+            </div>
+            <div className="flex flex-col items-end text-xs text-muted-foreground gap-1">
+              <span>
+                <span className="font-medium text-foreground">
+                  {progress?.participated_count}
+                </span>{" "}
+                / {progress?.total_wallpapers} Rated
+              </span>
+              <span>
+                <span className="font-medium text-foreground">
+                  {progress?.total_comparisons}
+                </span>{" "}
+                Comparisons
+              </span>
+            </div>
           </div>
-          <Progress value={progress?.percentage || 0} className="h-1" />
+          <Progress value={progress?.percentage || 0} className="h-2" />
         </div>
 
         {/* Comparison Area */}

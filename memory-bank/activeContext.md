@@ -33,6 +33,9 @@ Project completion and verification.
   - **ReviewView:** Clean grid layout.
 - **State Persistence:**
   - Lifted `RankView` state (`currentPair`, `nextPair`) to `AppContext` to preserve the current comparison when navigating between views.
+- **Progress Visibility:**
+  - Enhanced `RankView` progress header to show detailed stats: "Rated/Total Wallpapers" and "Total Comparisons".
+  - **Metric Update:** Changed the definition of "Rated" (and the progress percentage) to track wallpapers that have participated in _at least one comparison_, rather than waiting for high statistical confidence. This provides immediate feedback to the user that their votes are counting.
 
 ## Next Steps
 

@@ -19,6 +19,9 @@
   - Scanning interface.
   - Ranking interface (voting, keyboard shortcuts).
   - Review interface (grid view, move/keep actions).
+  - **Refinements:**
+    - Navigation state persistence (RankView state preserved).
+    - Detailed progress statistics (Rated count, Comparisons count).
 
 ## What's Left to Build
 

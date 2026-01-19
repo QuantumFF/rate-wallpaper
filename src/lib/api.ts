@@ -11,6 +11,7 @@ export interface ProgressStats {
   total_wallpapers: number;
   total_comparisons: number;
   evaluated_count: number;
+  participated_count: number;
   percentage: number;
 }
 
