@@ -105,7 +105,7 @@ export function RankView() {
         <div className="grid grid-cols-2 gap-4 md:gap-8 items-center">
           {/* Left Option */}
           <div
-            className={`relative w-full aspect-video group cursor-pointer transition-all duration-300 ${voting === "right" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "left" ? "ring-4 ring-primary scale-[1.02]" : "hover:scale-[1.01]"}`}
+            className={`relative w-full aspect-video group cursor-pointer transition-all duration-300 rounded-xl ${voting === "right" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "left" ? "ring-4 ring-primary scale-[1.02]" : "hover:scale-[1.01]"}`}
             onClick={() => handleVote(left, right, "left")}
           >
             <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">
@@ -133,7 +133,7 @@ export function RankView() {
 
           {/* Right Option */}
           <div
-            className={`relative w-full aspect-video group cursor-pointer transition-all duration-300 ${voting === "left" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "right" ? "ring-4 ring-primary scale-[1.02]" : "hover:scale-[1.01]"}`}
+            className={`relative w-full aspect-video group cursor-pointer transition-all duration-300 rounded-xl ${voting === "left" ? "opacity-50 scale-95 grayscale" : ""} ${voting === "right" ? "ring-4 ring-primary scale-[1.02]" : "hover:scale-[1.01]"}`}
             onClick={() => handleVote(right, left, "right")}
           >
             <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">

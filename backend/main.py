@@ -154,11 +154,18 @@ def move_wallpaper(request: schemas.MoveRequest, db: Session = Depends(get_db)):
     if not wallpaper:
         raise HTTPException(status_code=404, detail="Wallpaper not found")
     
-    if not os.path.exists(request.destination_folder):
-        os.makedirs(request.destination_folder)
+    # Determine destination directory
+    # If absolute, use as is. If relative, make it relative to the wallpaper's location.
+    if os.path.isabs(request.destination_folder):
+        dest_dir = request.destination_folder
+    else:
+        dest_dir = os.path.join(os.path.dirname(wallpaper.path), request.destination_folder)
+
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
         
     filename = os.path.basename(wallpaper.path)
-    dest_path = os.path.join(request.destination_folder, filename)
+    dest_path = os.path.join(dest_dir, filename)
     
     try:
         shutil.move(wallpaper.path, dest_path)
