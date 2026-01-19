@@ -15,7 +15,7 @@ class Wallpaper(Base):
     rating_mu = Column(Float, default=25.0)
     rating_sigma = Column(Float, default=8.333)
     
-    comparisons_count = Column(Integer, default=0)
+    comparisons_count = Column(Integer, default=0, index=True)
 
 class Comparison(Base):
     __tablename__ = "comparisons"

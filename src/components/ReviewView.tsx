@@ -111,7 +111,7 @@ export function ReviewView() {
               className="group relative aspect-video bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-md transition-all"
             >
               <img
-                src={api.getImageUrl(wallpaper.id)}
+                src={api.getImageUrl(wallpaper.id, "small")}
                 alt={wallpaper.filename}
                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
               />

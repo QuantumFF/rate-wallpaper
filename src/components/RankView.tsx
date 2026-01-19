@@ -13,21 +13,38 @@ import { useCallback, useEffect, useState } from "react";
 
 export function RankView() {
   const [pair, setPair] = useState<[Wallpaper, Wallpaper] | null>(null);
+  const [nextPair, setNextPair] = useState<[Wallpaper, Wallpaper] | null>(null);
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState<"left" | "right" | null>(null);
   const { progress, refreshProgress, setView } = useApp();
+
+  const fetchNextPair = useCallback(async () => {
+    try {
+      const newPair = await api.getPair();
+      setNextPair(newPair);
+
+      // Preload images
+      const img1 = new Image();
+      img1.src = api.getImageUrl(newPair[0].id, "medium");
+      const img2 = new Image();
+      img2.src = api.getImageUrl(newPair[1].id, "medium");
+    } catch (error) {
+      console.error("Failed to fetch next pair:", error);
+    }
+  }, []);
 
   const fetchPair = useCallback(async () => {
     setLoading(true);
     try {
       const newPair = await api.getPair();
       setPair(newPair);
+      void fetchNextPair();
     } catch (error) {
       console.error("Failed to fetch pair:", error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchNextPair]);
 
   useEffect(() => {
     void fetchPair();
@@ -44,14 +61,31 @@ export function RankView() {
     // Small delay for visual feedback
     await new Promise((resolve) => setTimeout(resolve, 300));
 
-    try {
-      await api.vote(winner.id, loser.id);
-      await refreshProgress();
+    // Optimistic update
+    if (nextPair) {
+      setPair(nextPair);
+      setNextPair(null);
       setVoting(null);
-      await fetchPair();
-    } catch (error) {
-      console.error("Failed to submit vote:", error);
-      setVoting(null);
+
+      // Background tasks
+      try {
+        await api.vote(winner.id, loser.id);
+        refreshProgress(); // No await needed
+        fetchNextPair(); // No await needed
+      } catch (error) {
+        console.error("Failed to submit vote:", error);
+      }
+    } else {
+      // Fallback if nextPair isn't ready
+      try {
+        await api.vote(winner.id, loser.id);
+        await refreshProgress();
+        setVoting(null);
+        await fetchPair();
+      } catch (error) {
+        console.error("Failed to submit vote:", error);
+        setVoting(null);
+      }
     }
   };
 
@@ -110,7 +144,7 @@ export function RankView() {
           >
             <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">
               <img
-                src={api.getImageUrl(left.id)}
+                src={api.getImageUrl(left.id, "medium")}
                 alt="Left Wallpaper"
                 className="object-cover w-full h-full bg-black/20"
               />
@@ -138,7 +172,7 @@ export function RankView() {
           >
             <div className="absolute inset-0 bg-card rounded-xl overflow-hidden border border-border shadow-sm">
               <img
-                src={api.getImageUrl(right.id)}
+                src={api.getImageUrl(right.id, "medium")}
                 alt="Right Wallpaper"
                 className="object-cover w-full h-full bg-black/20"
               />

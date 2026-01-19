@@ -17,7 +17,8 @@ export interface ProgressStats {
 const API_BASE = "http://localhost:8000";
 
 export const api = {
-  getImageUrl: (id: number) => `${API_BASE}/images/${id}`,
+  getImageUrl: (id: number, size: "small" | "medium" | "full" = "full") =>
+    `${API_BASE}/images/${id}?size=${size}`,
 
   scanDirectory: async (path: string): Promise<number> => {
     const res = await fetch(`${API_BASE}/scan`, {

@@ -7,10 +7,17 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from PIL import Image
+import io
 
 from . import models, schemas, database, scanner, ranking
 
 models.Base.metadata.create_all(bind=database.engine)
+
+# Ensure index exists for performance (migration for existing DBs)
+with database.engine.connect() as conn:
+    conn.execute(func.text("CREATE INDEX IF NOT EXISTS ix_wallpapers_comparisons_count ON wallpapers (comparisons_count)"))
+    conn.commit()
 
 app = FastAPI()
 
@@ -31,21 +38,60 @@ def get_db():
     finally:
         db.close()
 
-# Mount images directory dynamically? 
-# We need to know the root directory. For now, we can serve specific files via an endpoint 
-# or we can ask the user to mount a specific path. 
-# Better approach: The frontend requests an image by ID, and the backend streams it.
-# Or, since we are local, we can just serve the root folder if we knew it.
-# Let's add an endpoint to serve image by ID.
+# Image caching setup
+CACHE_DIR = os.path.join(os.getcwd(), ".cache")
+if not os.path.exists(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
 
 from fastapi.responses import FileResponse
 
 @app.get("/images/{wallpaper_id}")
-def get_image(wallpaper_id: int, db: Session = Depends(get_db)):
+def get_image(wallpaper_id: int, size: str = "full", db: Session = Depends(get_db)):
     wallpaper = db.query(models.Wallpaper).filter(models.Wallpaper.id == wallpaper_id).first()
     if not wallpaper:
         raise HTTPException(status_code=404, detail="Wallpaper not found")
-    return FileResponse(wallpaper.path)
+    
+    if size == "full":
+        return FileResponse(wallpaper.path, headers={"Cache-Control": "public, max-age=31536000"})
+    
+    # Handle resizing
+    target_width = 0
+    if size == "small":
+        target_width = 400 # Good for grid view
+    elif size == "medium":
+        target_width = 1920 # Good for rank view (HD)
+    else:
+        return FileResponse(wallpaper.path, headers={"Cache-Control": "public, max-age=31536000"})
+
+    # Check cache
+    cache_filename = f"{wallpaper.id}_{size}.jpg"
+    cache_path = os.path.join(CACHE_DIR, cache_filename)
+    
+    if os.path.exists(cache_path):
+        return FileResponse(cache_path, headers={"Cache-Control": "public, max-age=31536000"})
+    
+    # Generate thumbnail
+    try:
+        with Image.open(wallpaper.path) as img:
+            # Convert to RGB if necessary (e.g. for PNGs with transparency)
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+                
+            # Calculate height to maintain aspect ratio
+            aspect_ratio = img.height / img.width
+            target_height = int(target_width * aspect_ratio)
+            
+            # Only resize if the original is larger
+            if img.width > target_width:
+                img = img.resize((target_width, target_height), Image.Resampling.LANCZOS)
+                
+            img.save(cache_path, "JPEG", quality=85)
+            
+        return FileResponse(cache_path, headers={"Cache-Control": "public, max-age=31536000"})
+    except Exception as e:
+        print(f"Error resizing image: {e}")
+        # Fallback to original if resizing fails
+        return FileResponse(wallpaper.path, headers={"Cache-Control": "public, max-age=31536000"})
 
 @app.post("/scan", response_model=int)
 def scan_files(request: schemas.ScanRequest, db: Session = Depends(get_db)):
