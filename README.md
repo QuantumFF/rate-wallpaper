@@ -85,3 +85,7 @@ Users with large wallpaper collections often struggle to curate them. Traditiona
 1. **Scan:** On the home screen, enter the absolute path to your wallpaper folder and click "Start Scanning".
 2. **Rank:** Vote on image pairs. Click the image you prefer, or use the Left/Right arrow keys.
 3. **Review:** Switch to the "Review" tab to see your lowest-ranked images. Select images to move them to a "rejected" subfolder within their original directory.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0.
