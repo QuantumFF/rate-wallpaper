@@ -14,8 +14,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useApp } from "@/context/AppContext";
 import { api, type Wallpaper } from "@/lib/api";
-import { ArrowLeft, Check, FolderInput, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  ArrowLeft,
+  Check,
+  FolderInput,
+  Loader2,
+  RefreshCw,
+} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 export function ReviewView() {
   const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
@@ -23,19 +29,21 @@ export function ReviewView() {
   const [movePath, setMovePath] = useState("./rejected");
   const { setView } = useApp();
 
-  useEffect(() => {
-    const fetchReviewList = async () => {
-      try {
-        const list = await api.getReviewList(50);
-        setWallpapers(list);
-      } catch (error) {
-        console.error("Failed to fetch review list:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    void fetchReviewList();
+  const fetchReviewList = useCallback(async () => {
+    setLoading(true);
+    try {
+      const list = await api.getReviewList(50);
+      setWallpapers(list);
+    } catch (error) {
+      console.error("Failed to fetch review list:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    void fetchReviewList();
+  }, [fetchReviewList]);
 
   const handleKeep = (id: number) => {
     setWallpapers((prev) => prev.filter((w) => w.id !== id));
@@ -83,6 +91,15 @@ export function ReviewView() {
               className="h-8 w-40 bg-background border-none shadow-none focus-visible:ring-0"
             />
           </div>
+          <Button
+            variant="outline"
+            onClick={fetchReviewList}
+            className="gap-2"
+            disabled={loading}
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
           <Button
             variant="outline"
             onClick={() => setView("rank")}

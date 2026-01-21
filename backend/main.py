@@ -194,8 +194,8 @@ def review_wallpapers(limit: int = 50, db: Session = Depends(get_db)):
     # If > 10000, we might need a better strategy.
     
     wallpapers = db.query(models.Wallpaper).all()
-    # Sort by mu - 3*sigma (ascending)
-    wallpapers.sort(key=lambda w: w.rating_mu - 3 * w.rating_sigma)
+    # Sort by rating_mu (ascending)
+    wallpapers.sort(key=lambda w: w.rating_mu)
     
     return wallpapers[:limit]
 
